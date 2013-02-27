@@ -3,15 +3,15 @@
 
 function SelectionManager() {
 	var t = this;
-	
-	
+
+
 	// exports
 	t.select = select;
 	t.unselect = unselect;
 	t.reportSelection = reportSelection;
 	t.daySelectionMousedown = daySelectionMousedown;
-	
-	
+
+
 	// imports
 	var opt = t.opt;
 	var trigger = t.trigger;
@@ -19,8 +19,8 @@ function SelectionManager() {
 	var renderSelection = t.renderSelection;
 	var clearSelection = t.clearSelection;
 	var getViewName = t.getViewName;
-	
-	
+
+
 	// locals
 	var selected = false;
 
@@ -38,18 +38,27 @@ function SelectionManager() {
 			unselect(ev);
 		});
 	}
-	
 
-	function select(startDate, endDate, allDay) {
+
+	function select(startDate, endDate, allDay, resourceId) {
+		if (resourceId !== undefined) {
+			var row;
+			$.each(t.getResources || [], function(index, resource) {
+				if (resource.id === resourceId) {
+					row = index;
+					return false;
+				}
+			});
+		}
 		unselect();
 		if (!endDate) {
 			endDate = defaultSelectionEnd(startDate, allDay);
 		}
-		renderSelection(startDate, endDate, allDay);
-		reportSelection(startDate, endDate, allDay);
+		renderSelection(startDate, endDate, allDay, row);
+		reportSelection(startDate, endDate, allDay, row);
 	}
-	
-	
+
+
 	function unselect(ev) {
 		if (selected) {
 			selected = false;
@@ -57,8 +66,8 @@ function SelectionManager() {
 			trigger('unselect', null, ev);
 		}
 	}
-	
-	
+
+
 	function reportSelection(startDate, endDate, allDay, ev, resource) {
 		if (typeof resource == 'object' && resource.readonly === true) {
 			return false;
@@ -67,8 +76,8 @@ function SelectionManager() {
 		selected = true;
 		trigger('select', null, startDate, endDate, allDay, ev, '', resource);
 	}
-	
-	
+
+
 	function daySelectionMousedown(ev) { // not really a generic manager method, oh well
 		var cellDate = t.cellDate;
 		var cellIsAllDay = t.cellIsAllDay;
@@ -89,7 +98,7 @@ function SelectionManager() {
 				if (cell) {
 					resourceRO = typeof resources[cell.row] == 'object' ? resources[cell.row].readonly : false;
 				}
-				
+
 
 				if (cell && cellIsAllDay(cell) && resourceRO !== true) {
 					dates = [ cellDate(origCell), cellDate(cell) ].sort(cmp);
