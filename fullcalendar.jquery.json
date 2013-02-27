@@ -8,8 +8,8 @@
     "jquery-ui": "~1.8.23"
   },
 
-  "title": "FullCalendar",
-  "description": "Full-sized drag & drop event calendar",
+  "title": "FullCalendar ResourceViews version",
+  "description": "Full-sized drag & drop event calendar with Resource Views support (Gantt chart variation)",
   "keywords": [ "calendar", "event", "full-sized" ],
 
   "homepage": "http://arshaw.com/fullcalendar/",
@@ -34,5 +34,5 @@
     "email": "arshaw@arshaw.com",
     "url": "http://arshaw.com/"
   },
-  "copyright": "2012 Adam Shaw"
+  "copyright": "2012 Adam Shaw, 2012 Jarno Kurlin (ResourceViews component)"
 }
