@@ -42,9 +42,10 @@ function SelectionManager() {
 
 	function select(startDate, endDate, allDay, resourceId) {
 		if (resourceId !== undefined) {
-			var row;
-			$.each(t.getResources || [], function(index, resource) {
-				if (resource.id === resourceId) {
+			var resource, row;
+			$.each(t.getResources || [], function(index, r) {
+				if (r.id === resourceId) {
+					resource = r;
 					row = index;
 					return false;
 				}
@@ -55,7 +56,7 @@ function SelectionManager() {
 			endDate = defaultSelectionEnd(startDate, allDay);
 		}
 		renderSelection(startDate, endDate, allDay, row);
-		reportSelection(startDate, endDate, allDay, row);
+		reportSelection(startDate, endDate, allDay, null, resource);
 	}
 
 
