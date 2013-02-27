@@ -18,8 +18,8 @@ module.exports = function(grunt) {
 	var componentConfig = grunt.file.readJSON('component.json');
 	var pluginConfig = grunt.file.readJSON('fullcalendar.jquery.json');
 	var meta = _.extend({}, packageConfig, componentConfig, pluginConfig);
-	
-	
+
+
 	var config = { // this will eventually get passed to grunt.initConfig
 		meta: meta, // do this primarily for templating (<%= %>)
 
@@ -82,6 +82,7 @@ module.exports = function(grunt) {
 			'src/Calendar.js',
 			'src/Header.js',
 			'src/EventManager.js',
+			'src/ResourceManager.js',
 			'src/date_util.js',
 			'src/util.js',
 			'src/basic/MonthView.js',
@@ -100,6 +101,12 @@ module.exports = function(grunt) {
 			'src/common/CoordinateGrid.js',
 			'src/common/HoverListener.js',
 			'src/common/HorizontalPositionCache.js',
+			'src/resource/ResourceDayView.js',
+			'src/resource/ResourceEventRenderer.js',
+			'src/resource/ResourceMonthView.js',
+			'src/resource/ResourceNextWeeksView.js',
+			'src/resource/ResourceView.js',
+			'src/resource/ResourceWeekView.js',
 			'src/outro.js'
 		],
 		dest: 'build/out/fullcalendar/fullcalendar.js'
@@ -120,7 +127,8 @@ module.exports = function(grunt) {
 			'src/main.css',
 			'src/common/common.css',
 			'src/basic/basic.css',
-			'src/agenda/agenda.css'
+			'src/agenda/agenda.css',
+			'src/resource/resource.css'
 		],
 		dest: 'build/out/fullcalendar/fullcalendar.css'
 	};
