@@ -41,8 +41,13 @@ function SelectionManager() {
 
 
 	function select(startDate, endDate, allDay, resourceId) {
+		unselect();
+		if (!endDate) {
+			endDate = defaultSelectionEnd(startDate, allDay);
+		}
 		if (resourceId !== undefined) {
 			var resource, row;
+			var resourceRenderEnd = addMinutes(cloneDate(endDate), opt('slotMinutes') * -1);
 			$.each(t.getResources || [], function(index, r) {
 				if (r.id === resourceId) {
 					resource = r;
@@ -51,11 +56,7 @@ function SelectionManager() {
 				}
 			});
 		}
-		unselect();
-		if (!endDate) {
-			endDate = defaultSelectionEnd(startDate, allDay);
-		}
-		renderSelection(startDate, endDate, allDay, row);
+		renderSelection(startDate, resourceRenderEnd ? resourceRenderEnd : endDate, allDay, row);
 		reportSelection(startDate, endDate, allDay, null, resource);
 	}
 
