@@ -1,16 +1,16 @@
 
 function ResourceEventRenderer() {
 	var t = this;
-	
-	
+
+
 	// exports
 	t.renderEvents = renderEvents;
 	t.compileDaySegs = compileSegs; // for DayEventRenderer
 	t.clearEvents = clearEvents;
 	t.bindDaySeg = bindDaySeg;
 	t.resizableResourceEvent = resizableResourceEvent;
-	
-	
+
+
 	// imports
 	DayEventRenderer.call(t);
 	var opt = t.opt;
@@ -38,25 +38,25 @@ function ResourceEventRenderer() {
 	var renderTempDaySegs = t.renderTempDaySegs;
 	var compileDaySegs = t.compileDaySegs;
 	var eventResize = t.eventResize;
-	
-	
-	
+
+
+
 	/* Rendering
 	--------------------------------------------------------------------*/
-	
-	
+
+
 	function renderEvents(events, modifiedEventId) {
 		reportEvents(events);
 		renderDaySegs(compileSegs(events), modifiedEventId);
 	}
-	
-	
+
+
 	function clearEvents() {
 		reportEventClear();
 		getDaySegmentContainer().empty();
 	}
-	
-	
+
+
 	function compileSegs(events) {
 		var rowCnt = getRowCnt(),
 			colCnt = getColCnt(),
@@ -70,8 +70,8 @@ function ResourceEventRenderer() {
 			l, segs=[],
 			weekends = opt('weekends'),
 			startDay, endDay, startDate, endDate;
-		
-		if (viewName == 'resourceDay') {			
+
+		if (viewName == 'resourceDay') {
 			visEventsEnds = $.map(events, function(event) {
 				return event.end || addDays(event.start, 1);
 			});
@@ -84,9 +84,9 @@ function ResourceEventRenderer() {
 			for (j=0; j<row.length; j++) {
 				seg = row[j];
 				seg.row = i;
-				
+
 				// Let's be backwards compatitle. If event resource is not array, then we convert it.
-				if (!$.isArray(seg.event.resource)) { 
+				if (!$.isArray(seg.event.resource)) {
 					seg.event.resource = [seg.event.resource];
 				}
 
@@ -100,11 +100,11 @@ function ResourceEventRenderer() {
 					endDay = seg.event.end.getDay();
 					endDate = seg.event.end.getDate();
 				}
-				
+
 				// skip if weekends is set to false and this event is on weekend skip this event
-				if(!weekends && 
-					(startDay == 6 || startDay == 0) && 
-					(endDay == 6 || endDay == 0) && 
+				if(!weekends &&
+					(startDay == 6 || startDay == 0) &&
+					(endDay == 6 || endDay == 0) &&
 					(startDate == endDate || addDays(cloneDate(seg.event.start),1).getDate() == endDate)
 				) continue;
 
@@ -116,8 +116,8 @@ function ResourceEventRenderer() {
 		}
 		return segs;
 	}
-	
-	
+
+
 	function bindDaySeg(event, eventElement, seg) {
 		if (isEventDraggable(event)) {
 			draggableResourceEvent(event, eventElement);
@@ -128,22 +128,22 @@ function ResourceEventRenderer() {
 		eventElementHandlers(event, eventElement);
 			// needs to be after, because resizableDayEvent might stopImmediatePropagation on click
 	}
-	
-	
-	
+
+
+
 	/* Dragging
 	----------------------------------------------------------------------------*/
-	
-	
+
+
 	function draggableResourceEvent(event, eventElement) {
 		var hoverListener = getHoverListener();
 		var dayDelta, minuteDelta, resourceDelta, newResourceId, resources = t.getResources, viewName = getViewName(), weekendTestDate, daysToAdd, daysToDel, dayDeltaStart, dayDeltaEnd, i;
-		
+
 		var denyEventDragging = false;
 		$(resources).each(function(i, resource) {
 			if (resource.id == event.resource && resource.readonly) {
 				denyEventDragging = true;
-			} 
+			}
 		});
 
 		eventElement.draggable({
@@ -159,23 +159,23 @@ function ResourceEventRenderer() {
 					eventElement.draggable('option', 'revert', !cell || !rowDelta && !colDelta || resources[cell.row].readonly === true);
 
 					clearOverlays();
-					
+
 					if (cell && !resources[cell.row].readonly) {
 						//setOverflowHidden(true);
 						resourceDelta = rowDelta;
-						newResourceId = resources[cell.row].id; 
-						
+						newResourceId = resources[cell.row].id;
+
 						if (viewName == 'resourceDay') {
 							minuteDelta = colDelta * (opt('isRTL') ? -1 : 1) * opt('slotMinutes');
 							renderDayOverlay(
 								addMinutes(cloneDate(event.start), minuteDelta),
-								addMinutes(cloneDate(event.end), minuteDelta), 
+								addMinutes(cloneDate(event.end), minuteDelta),
 								false,
 								cell.row
 							);
 						}
 						else {
-							dayDelta = dayDeltaStart = dayDeltaEnd = colDelta * (opt('isRTL') ? -1 : 1);	
+							dayDelta = dayDeltaStart = dayDeltaEnd = colDelta * (opt('isRTL') ? -1 : 1);
 
 							// If weekends are not within, add or remove days from dayDelta. Is there a better way?
 							if (!opt('weekends') && (dayDelta > 0 || dayDelta < 0)) {
@@ -184,7 +184,7 @@ function ResourceEventRenderer() {
 										weekendTestDate = addDays(cloneDate(event.start), i);
 										if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) dayDeltaStart++;
 									}
-									
+
 									for(i=1; i<=dayDeltaEnd; i++) {
 										weekendTestDate = addDays(cloneDate(event.end), i);
 										if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) dayDeltaEnd++;
@@ -195,17 +195,17 @@ function ResourceEventRenderer() {
 										weekendTestDate = addDays(cloneDate(event.start), i);
 										if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) dayDeltaStart--;
 									}
-									
+
 									for(i=-1; i>=dayDeltaEnd; i--) {
 										weekendTestDate = addDays(cloneDate(event.end), i);
 										if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) dayDeltaEnd--;
 									}
 								}
-							}	
+							}
 
 							renderDayOverlay(
 								addDays(cloneDate(event.start), dayDeltaStart),
-								addDays(exclEndDay(event), dayDeltaEnd), 
+								addDays(exclEndDay(event), dayDeltaEnd),
 								false,
 								cell.row
 							);
@@ -235,7 +235,7 @@ function ResourceEventRenderer() {
 								if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) daysToAdd++;
 							}
 							if (daysToAdd > 0) event.start = addDays(cloneDate(event.start), daysToAdd, true);
-							
+
 							daysToAdd = 0;
 							for(i=1; i<=dayDelta+daysToAdd; i++) {
 								weekendTestDate = addDays(cloneDate(event.end), i);
@@ -268,25 +268,25 @@ function ResourceEventRenderer() {
 			}
 		});
 	}
-	
-	
+
+
 	/* Resizing
 	(Same as in DayEventRenderer, but row is passed in renderDayOverlay function)
 	-----------------------------------------------------------------------------------*/
-	
-	
+
+
 	function resizableResourceEvent(event, element, seg) {
 		var rtl = opt('isRTL');
 		var direction = rtl ? 'w' : 'e';
 		var handle = element.find('div.ui-resizable-' + direction);
 		var isResizing = false;
-		
+
 		// let's check if resource is readonly?
 		var denyEventResizing = false;
 		$(t.getResources).each(function(i, resource) {
 			if (resource.id == event.resource && resource.readonly) {
 				denyEventResizing = true;
-			} 
+			}
 		});
 
 		if (denyEventResizing) return false;
@@ -304,7 +304,7 @@ function ResourceEventRenderer() {
 					                               // (eventElementHandlers needs to be bound after resizableDayEvent)
 				}
 			});
-		
+
 		handle.mousedown(function(ev) {
 			if (ev.which != 1) {
 				return; // needs to be left mouse button
@@ -324,7 +324,7 @@ function ResourceEventRenderer() {
 			var minCell = dateCell(event.start);
 			var newEnd;
 			var weekendTestDate;
-			
+
 			clearSelection();
 			$('body')
 				.css('cursor', direction + '-resize')
@@ -334,14 +334,19 @@ function ResourceEventRenderer() {
 				if (cell) {
 					var r = Math.max(minCell.row, cell.row);
 					var c = cell.col;
-					
+
 					if (viewName == 'resourceDay') {
-						minuteDelta = (opt('slotMinutes') * c*dis+dit) - (opt('slotMinutes') * origCell.col*dis+dit);
+						// Event end should be greater than event start. So, count delta according to this rule.
+						if (c > minCell.col) {
+							minuteDelta = (opt('slotMinutes') * c*dis+dit) - (opt('slotMinutes') * origCell.col*dis+dit);
+						} else {
+							minuteDelta = (opt('slotMinutes') * minCell.col*dis+dit) - (opt('slotMinutes') * origCell.col*dis+dit);
+						}
 						var newEnd = addMinutes(eventEnd(event), minuteDelta, true);
 					}
 					else {
 						dayDelta = dayDeltaStart = dayDeltaEnd = (7 + c*dis+dit) - (7 + origCell.col*dis+dit);
-						
+
 						// If weekends is set to false, add or remove days from dayDelta
 						if (!opt('weekends') && (dayDelta > 0 || dayDelta < 0)) {
 							if (dayDelta > 0) {
@@ -356,11 +361,11 @@ function ResourceEventRenderer() {
 									if (weekendTestDate.getDay() == 6 || weekendTestDate.getDay() == 0) dayDeltaEnd--;
 								}
 							}
-						}	
+						}
 						newEnd = addDays(eventEnd(event), dayDeltaEnd, true);
-						
+
 					}
-					
+
 					if (dayDelta || minuteDelta) {
 						eventCopy.end = newEnd;
 						var oldHelpers = helpers;
@@ -387,7 +392,7 @@ function ResourceEventRenderer() {
 					}
 				}
 			}, ev);
-			
+
 			function mouseup(ev) {
 				trigger('eventResizeStop', this, event, ev);
 				$('body').css('cursor', '');
@@ -414,7 +419,7 @@ function ResourceEventRenderer() {
 							if (daysToDel < 0) event.end = addDays(cloneDate(event.end), daysToDel, true);
 						}
 					}
-				
+
 					eventResize(this, event, dayDelta, 0, ev);
 					// event redraw will clear helpers
 				}
@@ -422,12 +427,12 @@ function ResourceEventRenderer() {
 					eventResize(this, event, 0, minuteDelta, ev);
 				}
 				// otherwise, the drag handler already restored the old events
-				
+
 				setTimeout(function() { // make this happen after the element's click event
 					isResizing = false;
 				},0);
 			}
-			
+
 		});
 	}
 
