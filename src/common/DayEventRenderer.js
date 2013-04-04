@@ -1,7 +1,8 @@
+
 function DayEventRenderer() {
 	var t = this;
 
-
+	
 	// exports
 	t.renderDaySegs = renderDaySegs;
 	t.resizableDayEvent = resizableDayEvent;
@@ -41,8 +42,8 @@ function DayEventRenderer() {
 
 	/* Rendering
 	-----------------------------------------------------------------------------*/
-
-
+	
+	
 	function renderDaySegs(segs, modifiedEventId) {
 		var segmentContainer = getDaySegmentContainer();
 		var rowDivs;
@@ -86,8 +87,8 @@ function DayEventRenderer() {
 		}
 		daySegSetTops(segs, getRowTops(rowDivs));
 	}
-
-
+	
+	
 	function renderTempDaySegs(segs, adjustRow, adjustTop) {
 		var tempContainer = $("<div/>");
 		var elements;
@@ -115,8 +116,8 @@ function DayEventRenderer() {
 		}
 		return $(elements);
 	}
-
-
+	
+	
 	function daySegHTML(segs) { // also sets seg.left and seg.outerWidth
 		var rtl = opt('isRTL');
 		var i;
@@ -141,17 +142,17 @@ function DayEventRenderer() {
 		for (i=0; i<segCnt; i++) {
 			seg = segs[i];
 			event = seg.event;
-			classes = ['fc-event', 'fc-event-skin', 'fc-event-hori'];
+			classes = ['fc-event', 'fc-event-hori'];
 			if (isEventDraggable(event)) {
 				classes.push('fc-event-draggable');
 			}
+			if (seg.isStart) {
+				classes.push('fc-event-start');
+			}
+			if (seg.isEnd) {
+				classes.push('fc-event-end');
+			}
 			if (rtl) {
-				if (seg.isStart) {
-					classes.push('fc-corner-right');
-				}
-				if (seg.isEnd) {
-					classes.push('fc-corner-left');
-				}
 				leftCol = dayOfWeekCol(seg.end.getDay()-1);
 				rightCol = dayOfWeekCol(seg.start.getDay());
 				left = seg.isEnd ? colContentLeft(leftCol) : minLeft;
@@ -244,10 +245,7 @@ function DayEventRenderer() {
 				" class='" + classes.join(' ') + "'" +
 				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
 				">" +
-				"<div" +
-				" class='fc-event-inner fc-event-skin'" +
-				(skinCss ? " style='" + skinCss + "'" : "") +
-				">";
+				"<div class='fc-event-inner'>";
 			if (!event.allDay && seg.isStart) {
 				html +=
 					"<span class='fc-event-time'>" +
@@ -255,7 +253,7 @@ function DayEventRenderer() {
 					"</span>";
 			}
 			html +=
-				"<span class='fc-event-title' " + (skinCss ? " style='" + skinCss + "'" : "") + ">" + htmlEscape(event.title) + "</span>" +
+				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
 				"</div>";
 			if (seg.isEnd && isEventResizable(event)) {
 				html +=
@@ -272,8 +270,8 @@ function DayEventRenderer() {
 		}
 		return html;
 	}
-
-
+	
+	
 	function daySegElementResolve(segs, elements) { // sets seg.element
 		var i;
 		var segCnt = segs.length;
@@ -302,8 +300,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-
-
+	
+	
 	function daySegElementReport(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -317,8 +315,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-
-
+	
+	
 	function daySegHandlers(segs, segmentContainer, modifiedEventId) {
 		var i;
 		var segCnt = segs.length;
@@ -340,8 +338,8 @@ function DayEventRenderer() {
 		}
 		lazySegBind(segmentContainer, segs, bindDaySeg);
 	}
-
-
+	
+	
 	function daySegCalcHSides(segs) { // also sets seg.key
 		var i;
 		var segCnt = segs.length;
@@ -363,8 +361,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-
-
+	
+	
 	function daySegSetWidths(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -378,8 +376,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-
-
+	
+	
 	function daySegCalcHeights(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -401,20 +399,20 @@ function DayEventRenderer() {
 			}
 		}
 	}
-
-
+	
+	
 	function getRowDivs() {
 		var i;
 		var rowCnt = getRowCnt();
 		var rowDivs = [];
 		for (i=0; i<rowCnt; i++) {
 			rowDivs[i] = allDayRow(i)
-				.find('td:not(.fc-resourceName):first div.fc-day-content > div'); // optimal selector?
+				.find('div.fc-day-content > div'); // optimal selector?
 		}
 		return rowDivs;
 	}
-
-
+	
+	
 	function getRowTops(rowDivs) {
 		var i;
 		var rowCnt = rowDivs.length;
@@ -424,8 +422,8 @@ function DayEventRenderer() {
 		}
 		return tops;
 	}
-
-
+	
+	
 	function daySegSetTops(segs, rowTops) { // also triggers eventAfterRender
 		var i;
 		var segCnt = segs.length;
@@ -436,26 +434,25 @@ function DayEventRenderer() {
 			seg = segs[i];
 			element = seg.element;
 			if (element) {
-				var segTop = parseInt(seg.top)>0?parseInt(seg.top):0;
-				element[0].style.top = rowTops[seg.row] + segTop + 'px';
+				element[0].style.top = rowTops[seg.row] + (seg.top||0) + 'px';
 				event = seg.event;
 				trigger('eventAfterRender', event, event, element);
 			}
 		}
 	}
-
-
-
+	
+	
+	
 	/* Resizing
 	-----------------------------------------------------------------------------------*/
-
-
+	
+	
 	function resizableDayEvent(event, element, seg) {
 		var rtl = opt('isRTL');
 		var direction = rtl ? 'w' : 'e';
-		var handle = element.find('div.ui-resizable-' + direction);
+		var handle = element.find('.ui-resizable-' + direction); // TODO: stop using this class because we aren't using jqui for this
 		var isResizing = false;
-
+		
 		// TODO: look into using jquery-ui mouse widget for this stuff
 		disableTextSelection(element); // prevent native <a> selection for IE
 		element
@@ -469,7 +466,7 @@ function DayEventRenderer() {
 					                               // (eventElementHandlers needs to be bound after resizableDayEvent)
 				}
 			});
-
+		
 		handle.mousedown(function(ev) {
 			if (ev.which != 1) {
 				return; // needs to be left mouse button
@@ -526,7 +523,7 @@ function DayEventRenderer() {
 					renderDayOverlay(event.start, addDays(cloneDate(newEnd), 1)); // coordinate grid already rebuild at hoverListener.start
 				}
 			}, ev);
-
+			
 			function mouseup(ev) {
 				trigger('eventResizeStop', this, event, ev);
 				$('body').css('cursor', '');
@@ -537,14 +534,14 @@ function DayEventRenderer() {
 					// event redraw will clear helpers
 				}
 				// otherwise, the drag handler already restored the old events
-
+				
 				setTimeout(function() { // make this happen after the element's click event
 					isResizing = false;
 				},0);
 			}
-
+			
 		});
 	}
-
+	
 
 }
