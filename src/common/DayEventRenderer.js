@@ -2,7 +2,7 @@
 function DayEventRenderer() {
 	var t = this;
 
-	
+
 	// exports
 	t.renderDaySegs = renderDaySegs;
 	t.resizableDayEvent = resizableDayEvent;
@@ -42,8 +42,8 @@ function DayEventRenderer() {
 
 	/* Rendering
 	-----------------------------------------------------------------------------*/
-	
-	
+
+
 	function renderDaySegs(segs, modifiedEventId) {
 		var segmentContainer = getDaySegmentContainer();
 		var rowDivs;
@@ -87,8 +87,8 @@ function DayEventRenderer() {
 		}
 		daySegSetTops(segs, getRowTops(rowDivs));
 	}
-	
-	
+
+
 	function renderTempDaySegs(segs, adjustRow, adjustTop) {
 		var tempContainer = $("<div/>");
 		var elements;
@@ -116,8 +116,8 @@ function DayEventRenderer() {
 		}
 		return $(elements);
 	}
-	
-	
+
+
 	function daySegHTML(segs) { // also sets seg.left and seg.outerWidth
 		var rtl = opt('isRTL');
 		var i;
@@ -227,8 +227,14 @@ function DayEventRenderer() {
 					rightCol = dayOfWeekCol(seg.end.getDay()-1);
 				}
 
+				if (viewName == 'resourceDay') {
+					right = colContentRight(rightCol);
+				} else {
+					right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
+				}
 				left = seg.isStart ? colContentLeft(leftCol) : minLeft;
-				right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
+
+
 			}
 			classes = classes.concat(event.className);
 			if (event.source) {
@@ -270,8 +276,8 @@ function DayEventRenderer() {
 		}
 		return html;
 	}
-	
-	
+
+
 	function daySegElementResolve(segs, elements) { // sets seg.element
 		var i;
 		var segCnt = segs.length;
@@ -300,8 +306,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
+
+
 	function daySegElementReport(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -315,8 +321,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
+
+
 	function daySegHandlers(segs, segmentContainer, modifiedEventId) {
 		var i;
 		var segCnt = segs.length;
@@ -338,8 +344,8 @@ function DayEventRenderer() {
 		}
 		lazySegBind(segmentContainer, segs, bindDaySeg);
 	}
-	
-	
+
+
 	function daySegCalcHSides(segs) { // also sets seg.key
 		var i;
 		var segCnt = segs.length;
@@ -361,8 +367,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
+
+
 	function daySegSetWidths(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -376,8 +382,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
+
+
 	function daySegCalcHeights(segs) {
 		var i;
 		var segCnt = segs.length;
@@ -399,8 +405,8 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
+
+
 	function getRowDivs() {
 		var i;
 		var rowCnt = getRowCnt();
@@ -411,8 +417,8 @@ function DayEventRenderer() {
 		}
 		return rowDivs;
 	}
-	
-	
+
+
 	function getRowTops(rowDivs) {
 		var i;
 		var rowCnt = rowDivs.length;
@@ -422,8 +428,8 @@ function DayEventRenderer() {
 		}
 		return tops;
 	}
-	
-	
+
+
 	function daySegSetTops(segs, rowTops) { // also triggers eventAfterRender
 		var i;
 		var segCnt = segs.length;
@@ -440,19 +446,19 @@ function DayEventRenderer() {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/* Resizing
 	-----------------------------------------------------------------------------------*/
-	
-	
+
+
 	function resizableDayEvent(event, element, seg) {
 		var rtl = opt('isRTL');
 		var direction = rtl ? 'w' : 'e';
 		var handle = element.find('.ui-resizable-' + direction); // TODO: stop using this class because we aren't using jqui for this
 		var isResizing = false;
-		
+
 		// TODO: look into using jquery-ui mouse widget for this stuff
 		disableTextSelection(element); // prevent native <a> selection for IE
 		element
@@ -466,7 +472,7 @@ function DayEventRenderer() {
 					                               // (eventElementHandlers needs to be bound after resizableDayEvent)
 				}
 			});
-		
+
 		handle.mousedown(function(ev) {
 			if (ev.which != 1) {
 				return; // needs to be left mouse button
@@ -523,7 +529,7 @@ function DayEventRenderer() {
 					renderDayOverlay(event.start, addDays(cloneDate(newEnd), 1)); // coordinate grid already rebuild at hoverListener.start
 				}
 			}, ev);
-			
+
 			function mouseup(ev) {
 				trigger('eventResizeStop', this, event, ev);
 				$('body').css('cursor', '');
@@ -534,14 +540,14 @@ function DayEventRenderer() {
 					// event redraw will clear helpers
 				}
 				// otherwise, the drag handler already restored the old events
-				
+
 				setTimeout(function() { // make this happen after the element's click event
 					isResizing = false;
 				},0);
 			}
-			
+
 		});
 	}
-	
+
 
 }
