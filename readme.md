@@ -1,10 +1,9 @@
-
-FullCalendar - Full-sized drag & drop event calendar
+FullCalendar ResourceViews version - Full-sized drag & drop event calendar with Resource Views support (Gantt chart variation)
 ====================================================
 
 This document describes how to modify or contribute to the FullCalendar project.
 If you are looking for end-developer documentation, please visit
-the [project homepage](http://arshaw.com/fullcalendar/).
+the [project homepage](http://arshaw.com/fullcalendar/) and [fork homepage](http://tux.fi/~jarnok/fullcalendar-resourceviews/) (ResourceViews documentation and samples).
 
 
 Getting Set Up
@@ -21,7 +20,7 @@ Also, you will need to have the [Grunt](http://gruntjs.com/) build system instal
 
 Then, clone FullCalendar's git repo:
 
-	git clone git://github.com/arshaw/fullcalendar.git
+	git clone git://github.com/petyunchik/fullcalendar.git
 
 Enter the directory and install FullCalendar's development dependencies:
 
@@ -58,3 +57,8 @@ Writing Tests
 When fixing a bug or writing a feature, please make a corresponding HTML file in the `./tests/` directory
 to visually demonstrate your work. If the test requires user intervention to prove its point, please write
 instructions for the user to follow. Explore the existing tests for more info.
+
+About this fork
+-------------
+This fork has set a goal to maintain compatibility with the current stable version of the original [FullCalendar component](https://github.com/arshaw/fullcalendar) and [ResourceViews extension](https://github.com/jarnokurlin/).
+Also this version has a fixes of some bugs in the RescourceViews component.
