@@ -217,7 +217,7 @@ function ResourceView(element, calendar, viewName) {
 			if (date.getDay() == 0 || date.getDay() == 6) {
 				cell.addClass('fc-weekend');
 			}
-			if (date.getDay() == 1 && viewName == "resourceNextWeeks") {
+			if (date.getDay() == 1 && viewName == "resourceNextWeeks" && opt('weekNumbers')) {
 				cell.html(cell.html()+'<br>'+opt('weekPrefix')+' '+getWeek(date));
 			}
 
