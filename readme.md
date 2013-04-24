@@ -60,5 +60,9 @@ instructions for the user to follow. Explore the existing tests for more info.
 
 About this fork
 -------------
-This fork has set a goal to maintain compatibility with the current stable version of the original [FullCalendar component](https://github.com/arshaw/fullcalendar) and [ResourceViews extension](https://github.com/jarnokurlin/).
-Also this version has a fixes of some bugs in the RescourceViews component.
+This fork has set a goal to maintain compatibility with the current stable version of the original [FullCalendar component](https://github.com/arshaw/fullcalendar) and [ResourceViews extension](https://github.com/jarnokurlin/fullcalendar).
+Also this version has a fixes of some bugs in the RescourceViews component and tiny set of extra functionality.
+
+Extra options
+-------------
+`weekNumbers` (bool) - allows to enable/disable week numbers at resourceNextWeeks view
