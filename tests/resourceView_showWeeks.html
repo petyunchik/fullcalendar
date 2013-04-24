@@ -7,7 +7,7 @@
 <script src='../build/out/fullcalendar.js'></script>
 <script type='text/javascript'>
 	/*
-		This file tests that resources are in perfect order and everything works
+		This shows that the resource view respects the 'show weeks' option
 	*/
 	$(document).ready(function() {
 	
@@ -16,16 +16,17 @@
 		var m = date.getMonth();
 		var y = date.getFullYear();
 		
-		var calendar = $('#calendar').fullCalendar({
+		var options = {
 			header: {
 				left: 'prev,next today',
 				center: 'title',
-				right: 'resourceDay,resourceWeek,resourceMonth'
+				right: 'resourceNextWeeks'
 			},
-			defaultView: 'resourceDay',
+			defaultView: 'resourceNextWeeks',
 			firstDay: 1, 	
 			editable: true,
 			selectable: true,
+			numberOfWeeks: 4,
 			minTime: 7,
 			maxTime:17,
 			selectHelper: true,
@@ -118,7 +119,10 @@
 				alert('event was resized, new endtime: '+event.end);
 			},
 			height: calcCalendarHeight()
-		});
+		};
+		
+		$('#calendar1').fullCalendar($.extend({'weekNumbers': true}, options));
+		$('#calendar2').fullCalendar($.extend({'weekNumbers': false}, options));
 		
 		function calcCalendarHeight() {
 			var h = $(window).height() - 40;
@@ -127,7 +131,8 @@
 		}
 		
 		$(window).resize(function() {
-			$('#calendar').fullCalendar('option', 'height', calcCalendarHeight());
+			$('#calendar1').fullCalendar('option', 'height', calcCalendarHeight());
+			$('#calendar2').fullCalendar('option', 'height', calcCalendarHeight());
 		});
 		
 	});
@@ -142,13 +147,16 @@
 		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
 		}
 
-	#calendar {
+	#calendar1, #calendar2 {
 		width: 100%;
 		margin: 0 auto;
 		}
 </style>
 </head>
 <body>
-<div id='calendar'></div>
+<h2> Calendar with week numbers turned on</h2>
+<div id='calendar1'></div>
+<h2> Calendar with week numbers turned off</h2>
+<div id='calendar2'></div>
 </body>
 </html>
