@@ -337,6 +337,18 @@ function AgendaView(element, calendar, viewName) {
 		var bodyCell;
 		var date;
 		var today = clearTime(new Date());
+
+		if (showWeekNumbers) {
+			var weekText = formatDate(colDate(0), weekNumberFormat);
+			if (rtl) {
+				weekText = weekText + weekNumberTitle;
+			}
+			else {
+				weekText = weekNumberTitle + weekText;
+			}
+			dayHead.find('.fc-week-number').text(weekText);
+		}
+
 		for (i=0; i<colCnt; i++) {
 			date = colDate(i);
 			headCell = dayHeadCells.eq(i);
@@ -375,6 +387,9 @@ function AgendaView(element, calendar, viewName) {
 		slotScroller.height(bodyHeight - allDayHeight - 1);
 		
 		slotHeight = slotTableFirstInner.height() + 1; // +1 for border
+
+		snapRatio = opt('slotMinutes') / snapMinutes;
+		snapHeight = slotHeight / snapRatio;
 		
 		if (dateChanged) {
 			resetScroll();

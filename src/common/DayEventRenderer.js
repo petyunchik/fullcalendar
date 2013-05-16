@@ -233,8 +233,6 @@ function DayEventRenderer() {
 					right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
 				}
 				left = seg.isStart ? colContentLeft(leftCol) : minLeft;
-
-
 			}
 			classes = classes.concat(event.className);
 			if (event.source) {

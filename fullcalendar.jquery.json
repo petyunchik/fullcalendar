@@ -1,6 +1,6 @@
 {
   "name": "fullcalendar",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "dependencies": {
     "jquery": "~1.9.1"
   },
@@ -9,8 +9,7 @@
   },
 
   "title": "FullCalendar ResourceViews version",
-  "description": "Full-sized drag & drop event calendar with Resource Views support (Gantt chart variation)",
-  "keywords": [ "calendar", "event", "full-sized" ],
+  "description": "Full-sized drag & drop event calendar with Resource Views support (Gantt   "keywords": [ "calendar", "event", "full-sized" ],
 
   "homepage": "http://arshaw.com/fullcalendar/",
   "demo": "http://arshaw.com/fullcalendar/",
