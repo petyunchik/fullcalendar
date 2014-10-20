@@ -17,7 +17,7 @@ var dayIDs = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
 	DAY_MS = 86400000,
 	HOUR_MS = 3600000,
 	MINUTE_MS = 60000;
-	
+
 
 function addYears(d, n, keepTime) {
 	d.setFullYear(d.getFullYear() + n);
@@ -85,7 +85,7 @@ function addMinutes(d, n) {
 function clearTime(d) {
 	d.setHours(0);
 	d.setMinutes(0);
-	d.setSeconds(0); 
+	d.setSeconds(0);
 	d.setMilliseconds(0);
 	return d;
 }
@@ -149,7 +149,7 @@ function getWeek(d) {
 	var yearStart = new Date(d.getFullYear(),0,1);
 	// Calculate full weeks to nearest Thursday
 	var weeknum = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-	
+
 	return weeknum;
 }
 
@@ -188,6 +188,11 @@ function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
 		return null;
 	}
 	var date = new Date(m[1], 0, 1);
+
+	// Work around DST change at 1 Jan 00:00 (which MS supposed we had in Russia in 1 Jan 2014)
+	if (date.getFullYear() != m[1])
+		date = new Date(m[1], 0, 1, 1);
+
 	if (ignoreTimezone || !m[13]) {
 		var check = new Date(m[1], 0, 1, 9, 0);
 		if (m[3]) {
@@ -387,7 +392,7 @@ fc.dateFormatters = dateFormatters;
 
 
 /* thanks jQuery UI (https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.datepicker.js)
- * 
+ *
  * Set as calculateWeek to determine the week of the year based on the ISO 8601 definition.
  * @param  date  Date - the date to get the week for
  * @return  number - the number of the week within the year that contains this date
