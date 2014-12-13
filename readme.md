@@ -1,5 +1,5 @@
 FullCalendar ResourceViews version - Full-sized drag & drop event calendar with Resource Views support (Gantt chart variation)
-====================================================
+==============================================================================================================================
 
 This document describes how to modify or contribute to the FullCalendar project.
 If you are looking for end-developer documentation, please visit
